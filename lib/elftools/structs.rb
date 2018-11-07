@@ -25,7 +25,7 @@ module ELFTools
       class << self
         # Hook constructor, while +BinData::Record+ doesn't allow us to override +#initialize+,
         # so we hack +new+ here.
-        def new(**kwargs)
+        def new(kwargs={})
           offset = kwargs.delete(:offset)
           super.tap do |obj|
             obj.offset = offset
@@ -83,9 +83,9 @@ module ELFTools
       uint16 :e_machine
       uint32 :e_version
       # entry point
-      choice :e_entry, **CHOICE_SIZE_T
-      choice :e_phoff, **CHOICE_SIZE_T
-      choice :e_shoff, **CHOICE_SIZE_T
+      choice :e_entry, CHOICE_SIZE_T
+      choice :e_phoff, CHOICE_SIZE_T
+      choice :e_shoff, CHOICE_SIZE_T
       uint32 :e_flags
       uint16 :e_ehsize # size of this header
       uint16 :e_phentsize # size of each segment
@@ -100,14 +100,14 @@ module ELFTools
       endian :big_and_little
       uint32 :sh_name
       uint32 :sh_type
-      choice :sh_flags, **CHOICE_SIZE_T
-      choice :sh_addr, **CHOICE_SIZE_T
-      choice :sh_offset, **CHOICE_SIZE_T
-      choice :sh_size, **CHOICE_SIZE_T
+      choice :sh_flags, CHOICE_SIZE_T
+      choice :sh_addr, CHOICE_SIZE_T
+      choice :sh_offset, CHOICE_SIZE_T
+      choice :sh_size, CHOICE_SIZE_T
       uint32 :sh_link
       uint32 :sh_info
-      choice :sh_addralign, **CHOICE_SIZE_T
-      choice :sh_entsize, **CHOICE_SIZE_T
+      choice :sh_addralign, CHOICE_SIZE_T
+      choice :sh_entsize, CHOICE_SIZE_T
     end
 
     # Program header structure for 32bit.
@@ -179,25 +179,25 @@ module ELFTools
     # Dynamic tag header.
     class ELF_Dyn < ELFStruct
       endian :big_and_little
-      choice :d_tag, selection: :elf_class, choices: { 32 => :int32, 64 => :int64 }
+      choice :d_tag, CHOICE_SIZE_T
       # This is an union type named +d_un+ in original source,
       # simplify it to be +d_val+ here.
-      choice :d_val, **CHOICE_SIZE_T
+      choice :d_val, CHOICE_SIZE_T
     end
 
     # Rel header in .rel section.
     class ELF_Rel < ELFStruct
       endian :big_and_little
-      choice :r_offset, **CHOICE_SIZE_T
-      choice :r_info, **CHOICE_SIZE_T
+      choice :r_offset, CHOICE_SIZE_T
+      choice :r_info, CHOICE_SIZE_T
     end
 
     # Rela header in .rela section.
     class ELF_Rela < ELFStruct
       endian :big_and_little
-      choice :r_offset, **CHOICE_SIZE_T
-      choice :r_info, **CHOICE_SIZE_T
-      choice :r_addend, selection: :elf_class, choices: { 32 => :int32, 64 => :int64 }
+      choice :r_offset, CHOICE_SIZE_T
+      choice :r_info, CHOICE_SIZE_T
+      choice :r_addend, CHOICE_SIZE_T
     end
   end
 end

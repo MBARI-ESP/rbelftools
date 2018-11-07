@@ -16,8 +16,8 @@ module ELFTools
       # @param [Proc] section_at
       #   The method for fetching other sections by index.
       #   This lambda should be {ELFTools::ELFFile#section_at}.
-      def initialize(header, stream, section_at: nil, **_kwargs)
-        @section_at = section_at
+      def initialize(header, stream, _kwargs)
+        @section_at = _kwargs.delete :section_at
         # For faster #symbol_by_name
         super
       end
@@ -109,10 +109,10 @@ module ELFTools
       #   The symbol string section.
       #   If +Proc+ is given, it will be called at the first time
       #   access {Symbol#name}.
-      def initialize(header, stream, symstr: nil)
+      def initialize(header, stream, kwargs={})
         @header = header
         @stream = stream
-        @symstr = symstr
+        @symstr = kwargs.delete :symstr
       end
 
       # Return the symbol name.

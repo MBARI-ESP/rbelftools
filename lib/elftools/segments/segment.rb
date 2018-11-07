@@ -12,10 +12,10 @@ module ELFTools
       #   Streaming object.
       # @param [Method] offset_from_vma
       #   The method to get offset of file, given virtual memory address.
-      def initialize(header, stream, offset_from_vma: nil)
+      def initialize(header, stream, kwargs={})
         @header = header
         @stream = stream
-        @offset_from_vma = offset_from_vma
+        @offset_from_vma = kwargs.delete :offset_from_vma
       end
 
       # Return +header.p_type+ in a simplier way.
